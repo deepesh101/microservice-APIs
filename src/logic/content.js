@@ -56,7 +56,7 @@ const createOrUpdateSeries = async input => {
             newSeries.chapters = []
         }
         await newSeries.save()
-        return _id
+        return { _id, series_name: input.series_name }
     } else {
         throw new Error('Series Name is mandatory')
     }
@@ -66,8 +66,8 @@ const bulkUpload = async input => {
     let result = []
     if (input && input.length > 0) {
         for (var i=0; i<input.length; i++) {
-            let id = await createOrUpdateSeries(input[i])
-            result.push(id)
+            let uploaded = await createOrUpdateSeries(input[i])
+            result.push(uploaded)
         }
         return result
     }
