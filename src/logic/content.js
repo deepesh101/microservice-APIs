@@ -1,3 +1,4 @@
+const mongoose = require('mongoose')
 const { series, user } = require('../models')
 const { seriesModel } = series
 const { userModel } = user
@@ -44,6 +45,8 @@ const createOrUpdateSeries = async input => {
         )
     } else if (input && input.series_name) {
         const newSeries = new seriesModel({})
+        const _id = mongoose.Types.ObjectId()
+        newSeries._id = _id
         newSeries.name = input.series_name
         newSeries.num_chapters = input.num_chapters
         newSeries.uploaded_at = new Date()
@@ -53,18 +56,20 @@ const createOrUpdateSeries = async input => {
             newSeries.chapters = []
         }
         await newSeries.save()
-        return true
+        return _id
     } else {
         throw new Error('Series Name is mandatory')
     }
 }
 
 const bulkUpload = async input => {
+    let result = []
     if (input && input.length > 0) {
         for (var i=0; i<input.length; i++) {
-            await createOrUpdateSeries(input[i])
+            let id = await createOrUpdateSeries(input[i])
+            result.push(id)
         }
-        return true
+        return result
     }
     return false
 }
