@@ -13,7 +13,15 @@ module.exports = async app => {
     })
     app.post('/upload', async (req, res, next) => {
         try {
-            const result = await contentLogic.createSeries(req.body)
+            const result = await contentLogic.createOrUpdateSeries(req.body)
+            res.status(200).json(Success(result))
+        } catch (e) {
+            next(e)
+        }
+    })
+    app.post('/bulk-upload', async (req, res, next) => {
+        try {
+            const result = await contentLogic.bulkUpload(req.body)
             res.status(200).json(Success(result))
         } catch (e) {
             next(e)

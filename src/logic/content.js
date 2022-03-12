@@ -21,7 +21,7 @@ const fetchContent = async (user_id, series_ids) => {
     return allSeriesData
 }
 
-const createSeries = async input => {
+const createOrUpdateSeries = async input => {
     let chapters = []
     if (input && input.chapters && input.chapters.length) {
         chapters = input.chapters.map(c => ({
@@ -59,7 +59,18 @@ const createSeries = async input => {
     }
 }
 
+const bulkUpload = async input => {
+    if (input && input.length > 0) {
+        for (var i=0; i<input.length; i++) {
+            await createOrUpdateSeries(input[i])
+        }
+        return true
+    }
+    return false
+}
+
 module.exports = {
     fetchContent,
-    createSeries
+    createOrUpdateSeries,
+    bulkUpload
 }
